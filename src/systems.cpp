@@ -3,8 +3,6 @@
 #include <vector>
 #include <stdexcept>
 #include <unordered_map>
-#include <cstdlib>
-// #include <cstring>
 
 template <typename Scalar>
 class Frame {
@@ -80,7 +78,7 @@ public:
     return new ExampleStaticFrame(*this);
   }
 
-// private:
+// private: // normally this would be private, but I'm exposing it to let me print the data without writing ostream << bindings for now
   Eigen::Matrix<Scalar, 2, 1> data;
 };
 
@@ -90,20 +88,24 @@ public:
   virtual void dynamics(const Frame<int> &x, Frame<int> &xdot) const = 0;
 };
 
+#define DYNAMICS_DISPATCH_BOILERPLATE \
+  void dynamics(const Frame<double> &x, Frame<double> &xdot) const { \
+    dynamics<double>(x, xdot); \
+  } \
+  void dynamics(const Frame<int> &x, Frame<int> &xdot) const { \
+    dynamics<int>(x, xdot); \
+  } \
+
+
 class ExampleStaticSystem : public System {
 public:
   template <typename Scalar> 
-  void dynamicsImplementation(const Frame<Scalar> &x, Frame<Scalar> &xdot) const {
+  void dynamics(const Frame<Scalar> &x, Frame<Scalar> &xdot) const {
     xdot.setValue(xdot.getIndex("q"), x.getValue(x.getIndex("qdot")));
     xdot.setValue(xdot.getIndex("qdot"), 1);
   }
 
-  void dynamics(const Frame<double> &x, Frame<double> &xdot) const {
-    dynamicsImplementation(x, xdot);
-  }
-  void dynamics(const Frame<int> &x, Frame<int> &xdot) const {
-    dynamicsImplementation(x, xdot);
-  }
+  DYNAMICS_DISPATCH_BOILERPLATE
 };
 
 class Chain : public System {
@@ -117,45 +119,14 @@ public:
     sys2(sys2_) {}
 
   template <typename Scalar>
-  void dynamicsImplementation(const Frame<Scalar> &x, Frame<Scalar> &xdot) const {
+  void dynamics(const Frame<Scalar> &x, Frame<Scalar> &xdot) const {
     auto intermediate = std::unique_ptr<Frame<Scalar> >(xdot.clone());
     sys1.dynamics(x, *intermediate);
     sys2.dynamics(*intermediate, xdot);
   }
 
-  void dynamics(const Frame<double> &x, Frame<double> &xdot) const {
-    dynamicsImplementation(x, xdot);
-  }
-  void dynamics(const Frame<int> &x, Frame<int> &xdot) const {
-    dynamicsImplementation(x, xdot);
-  }
+  DYNAMICS_DISPATCH_BOILERPLATE
 };
-
-// constexpr int getindex(const char * (str)) {
-//   return static_strequal(str, "baz") ? 0 : 
-//          static_strequal(str, "foobar") ? 1 :
-//          -1;
-// }
-
-// void foo(const System &sys) {
-//   std::cout << sys.dynamics(1.0) << std::endl;
-//   std::cout << sys.dynamics(1) << std::endl;
-// }
-
-// int getindex_runtime(const char * (str)) {
-//   if (static_strequal(str, "baz")) {
-//     return 0;
-//   } else if (static_strequal(str, "foobar")) {
-//     return 1;
-//   } else {
-//     return -1;
-//   }
-// }
-
-// struct FixedIndices {
-//   int foobar;
-//   int baz;
-// };
 
 int main() {
   auto sys1 = ExampleStaticSystem();
