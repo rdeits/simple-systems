@@ -1,0 +1,4 @@
+cxx11-pod/
+eigen-pod/
+swigmake/
+pods-cmake/
