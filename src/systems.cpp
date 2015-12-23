@@ -168,11 +168,6 @@ int main() {
 
   std::cout << xdot.data.transpose() << std::endl;
 
-  // auto sys1 = Example();
-  // std::cout << sys1.dynamics(1.0) << std::endl;
-  // std::cout << sys1.dynamics(1) << std::endl;
-  // foo(sys1);
-
   auto sys2 = ExampleStaticSystem();
 
   auto sys3 = Chain(sys1, sys2);
@@ -180,17 +175,6 @@ int main() {
   sys3.dynamics(x, xdot);
   std::cout << xdot.data.transpose() << std::endl;
 
-  // std::cout << sys3.dynamics(1.0) << std::endl;
-  // std::cout << sys3.dynamics(1) << std::endl;
-
-
-  // std::cout << static_strequal("foo", "f") << std::endl;
-  // std::cout << static_strequal("foo", "foo") << std::endl;
-  // std::cout << static_strequal("foo", "baz") << std::endl;
-  // std::cout << static_strequal("f", "foo") << std::endl;
-
-  // static_assert(static_strequal("baz", "baz"), "should be equal");
-  // static_assert(getindex("foobar") == 1, "index");
 
   // int x[] = {5, 6};
   // auto indices = std::unordered_map<const char *, int> {{"baz", 0}, {"foobar", 1}};
@@ -219,102 +203,6 @@ int main() {
   // }
   // std::cout << y << std::endl;
 
-  // constexpr auto baz = "baz";
-  // constexpr auto foobar = "foobar";
-  // std::cout << x[getindex(baz)] << std::endl;
-  // std::cout << x[getindex(foobar)] << std::endl;
-  // std::cout << getindex("foo") << std::endl;
-  // std::cout << getindex("baz") << std::endl;
-  // std::cout << getindex("foobar") << std::endl;
-
-  // if (s == "baz") {
-  //   std::cout << "1" << std::endl;
-  // } else if (s == "foobar") {
-  //   std::cout << "2" << std::endl;
-  // }
-  // std::cout << "foobar";
 }
-
-// class Frame {
-// public:
-//   // virtual int getCoordinateIndex(const std::string & name);
-// };
-
-// int getCoordinateIndex(const Frame & frame, const std::string & name) {
-//   throw std::runtime_error("not implemented");
-// }
-
-
-// template <typename Scalar>
-// class VectorFrame : public Frame {
-// public:
-//   Eigen::Matrix<Scalar, Eigen::Dynamic, 1> data;
-
-//   std::vector<std::string> coordinate_names;
-
-//   VectorFrame(Eigen::Matrix<Scalar, Eigen::Dynamic, 1> data_, std::vector<std::string> coordinate_names_):
-//     data(data_),
-//     coordinate_names(coordinate_names_) {
-//     if (data_.size() != coordinate_names.size()) {
-//       throw std::runtime_error("lengths don't match");
-//     }
-//   }
-// };
-
-// template <typename Scalar>
-// int getCoordinateIndex(const VectorFrame<Scalar> &frame, const std::string & name) {
-//   auto match = std::find(frame.coordinate_names.begin(), frame.coordinate_names.end(), name);
-//   if (match != frame.coordinate_names.end()) {
-//     return match - frame.coordinate_names.begin();
-//   } else {
-//     std::cerr << "coordinate name not found: " << name << std::endl;
-//     throw std::runtime_error("coordinate name not found");
-//   }
-// }
-
-//   Scalar get(int index) {
-//     return data[index];
-//   }
-
-//   void set(int index, Scalar value) {
-//     data[index] = value;
-//   }
-// };
-
-
-
-// class System {
-
-// public:
-//   Frame dynamics(double t, Frame x, Frame u);
-
-//   Frame output(double t, Frame x, Frame u);
-// };
-
-// class DoubleIntegrator : public System {
-//   Frame dynamics(double t, Frame x, Frame u) {
-//     auto xdot = VectorFrame<double>(x.data, x.coordinate_names);
-//     xdot.set(xdot.getCoordinateIndex("z"), x.get(x.getCoordinateIndex("zdot")));
-//     xdot.set(xdot.getCoordinateIndex("zdot"), u.get(u.getCoordinateIndex("z")));
-//     return xdot;
-//   }
-// };
-
-// int main(int argc, char ** argv) {
-//   auto x0 = Eigen::VectorXd(2);
-//   x0 << 0, 1;
-//   std::vector<std::string> x_coords = {"z", "zdot"};
-//   x0_frame = VectorFrame(x0, x_coords);
-
-//   auto u = Eigen::VectorXd(1);
-//   u << 2;
-//   std::vector<std::string> u_coords = {"z"};
-//   u_frame = VectorFrame(u, u_coords);
-
-//   auto sys = DoubleIntegrator();
-//   auto xdot = sys.dynamics(0, x0_frame, u_frame);
-//   std::cout << "xdot: " << xdot.data.transpose();
-
-// }
 
 
