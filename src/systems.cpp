@@ -71,7 +71,7 @@ public:
   static constexpr int getIndexStatic(const char *name) {
     return static_strequal(name, "q") ? 0 : 
            static_strequal(name, "qdot") ? 1 :
-           -1;
+           throw std::runtime_error("index not found");
   }
 
   virtual ExampleStaticFrame* clone() const {
